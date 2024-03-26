@@ -39,16 +39,16 @@ contract TokenSwap {
 
     /// @notice Swap ETH for LINK
     /// @param amountIn The amount of ETH to swap
-    function swapEthForLink(uint256 amountIn) external payable {
-        require(msg.value == amountIn, "Incorrect ETH amount");
+    function swapEthForLink(uint256 amountIn) external {
+        IERC20(ETH_ADDRESS).transferFrom(msg.sender, address(this), amountIn);
         uint256 amountOut = _getAmountOut(ETH_ADDRESS, LINK_ADDRESS, amountIn);
         IERC20(LINK_ADDRESS).transfer(msg.sender, amountOut);
     }
 
     /// @notice Swap ETH for DAI
     /// @param amountIn The amount of ETH to swap
-    function swapEthForDai(uint256 amountIn) external payable {
-        require(msg.value == amountIn, "Incorrect ETH amount");
+    function swapEthForDai(uint256 amountIn) external {
+        IERC20(ETH_ADDRESS).transferFrom(msg.sender, address(this), amountIn);
         uint256 amountOut = _getAmountOut(ETH_ADDRESS, DAI_ADDRESS, amountIn);
         IERC20(DAI_ADDRESS).transfer(msg.sender, amountOut);
     }
@@ -58,7 +58,7 @@ contract TokenSwap {
     function swapLinkForEth(uint256 amountIn) external {
         IERC20(LINK_ADDRESS).transferFrom(msg.sender, address(this), amountIn);
         uint256 amountOut = _getAmountOut(LINK_ADDRESS, ETH_ADDRESS, amountIn);
-        payable(msg.sender).transfer(amountOut);
+        IERC20(ETH_ADDRESS).transfer(msg.sender, amountOut);
     }
 
     /// @notice Swap LINK for DAI
@@ -74,7 +74,7 @@ contract TokenSwap {
     function swapDaiForEth(uint256 amountIn) external {
         IERC20(DAI_ADDRESS).transferFrom(msg.sender, address(this), amountIn);
         uint256 amountOut = _getAmountOut(DAI_ADDRESS, ETH_ADDRESS, amountIn);
-        payable(msg.sender).transfer(amountOut);
+        IERC20(ETH_ADDRESS).transfer(msg.sender, amountOut);
     }
 
     /// @notice Swap DAI for LINK
@@ -101,12 +101,7 @@ contract TokenSwap {
     }
 }
 
-// address private constant FEED_REGISTRY =
-// 0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf;
-
-// address private constant ETH_ADDRESS =
-//     0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
-// address private constant LINK_ADDRESS =
-//     0x1400DD26d3772928e0F92B4189808a29eC9C6A6a;
-// address private constant DAI_ADDRESS =
-//     0x6B175474E89094C44Da98b954EedeAC495271d0F;
+//0x779877A7B0D9E8603169DdbD7836e478b4624789 Link sepolia
+//0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 eth sepolia
+// 0x68194a729C2450ad26072b3D33ADaCbcef39D574 dai sepolia
+// 0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf feed registry
