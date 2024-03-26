@@ -23,7 +23,13 @@ contract SwapTest is Test {
 
     TokenSwap public swapContractAddress;
 
-    address prankAddrWhale = 0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf;
+    address whaleAddr = 0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf;
+    // address whaleAddrHasDAI = 0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf;
+    // address whaleAddrHasZeroLink = 0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf;
+    // address USDCAddr = 0xf584f8728b874a6a5c7a8d4d387c9aae9172d621;
+    // address USDCddrHasEth = 0xf584f8728b874a6a5c7a8d4d387c9aae9172d621;
+    // address USDCaddrHasZeroLink = 0xf584f8728b874a6a5c7a8d4d387c9aae9172d621;
+
     // address USDCHolder = 0xf584f8728b874a6a5c7a8d4d387c9aae9172d621;
 
     function setUp() public {
@@ -38,18 +44,18 @@ contract SwapTest is Test {
             feedregistry
         );
 
-        vm.startPrank(prankAddrWhale);
+        vm.startPrank(whaleAddr);
     }
     uint256 amt = 1e18;
 
     function testSwapEthForLink() public {
-        uint256 initialBalance = linkInterface.balanceOf(msg.sender);
+        uint256 initialBalance = wethInterface.balanceOf(msg.sender);
         console.log("initial balance: ", initialBalance);
 
-        // require(initialBalance > 0, "Insufficient LINK balance");
-        // linkInterface.approve(address(swapContractAddress), initialBalance);
-        // tokenSwap.swapEthToLink(linkAmount);
-        // linkInterface.approve(address(this), amt);
-        // linkInterface.transferFrom(prankAddr, address(this), amt);
+        require(initialBalance > 0, "Insufficient LINK balance");
+        wethInterface.approve(address(swapContractAddress), amt);
+        swapContractAddress.swapEthForLink(amt);
+        // wethInterface.approve(address(this), amt);
+        // wethInterface.transferFrom(whaleAddr, address(this), amt);
     }
 }
