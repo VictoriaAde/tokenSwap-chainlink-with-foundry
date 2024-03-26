@@ -6,56 +6,59 @@ import {TokenSwap} from "../src/TokenSwap.sol";
 import "../src/interface/IERC20.sol";
 
 contract SwapTest is Test {
-    //0x514910771AF9Ca656af840dff83E8264EcF986CA Link mainnet
-    //0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 eth mainnet
-    // 0x6B175474E89094C44Da98b954EedeAC495271d0F dai mainnet
-    // address WETHAddress = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-    // address DAIAddress = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
-    address feedregistry = 0x42585eD362B3f1BCa95c640FdFf35Ef899212734;
+    address ETH_USD_FEED = 0x694AA1769357215DE4FAC081bf1f309aDC325306;
+    address DAI_USD_FEED = 0x14866185B1962B63C3Ea9E03Bc1da838bab34C19;
 
-    address LINKAddress = 0x514910771AF9Ca656af840dff83E8264EcF986CA;
+    address USDAddress = 0xf08A50178dfcDe18524640EA6618a1f965821715;
     address DAIAddress = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
     address WETHAddress = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
 
-    IERC20 linkInterface;
+    IERC20 USDInterface;
     IERC20 wethInterface;
     IERC20 daiInterface;
 
     TokenSwap public swapContractAddress;
 
     address whaleAddr = 0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf;
-    // address whaleAddrHasDAI = 0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf;
-    // address whaleAddrHasZeroLink = 0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf;
-    // address USDCAddr = 0xf584f8728b874a6a5c7a8d4d387c9aae9172d621;
-    // address USDCddrHasEth = 0xf584f8728b874a6a5c7a8d4d387c9aae9172d621;
-    // address USDCaddrHasZeroLink = 0xf584f8728b874a6a5c7a8d4d387c9aae9172d621;
 
     // address USDCHolder = 0xf584f8728b874a6a5c7a8d4d387c9aae9172d621;
 
     function setUp() public {
-        linkInterface = IERC20(LINKAddress);
+        USDInterface = IERC20(USDAddress);
         wethInterface = IERC20(WETHAddress);
         daiInterface = IERC20(DAIAddress);
 
         swapContractAddress = new TokenSwap(
             WETHAddress,
-            LINKAddress,
-            // DAIAddress,
-            feedregistry,
-            feedregistry
+            USDAddress,
+            DAIAddress,
+            DAI_USD_FEED,
+            ETH_USD_FEED
         );
 
         vm.startPrank(whaleAddr);
     }
+
     uint256 amt = 1e18;
 
-    function testSwapEthForLink() public {
+    function testSwapETHForUSD() public {
         uint256 initialBalance = wethInterface.balanceOf(msg.sender);
-        console.log("initial balance: ", initialBalance);
+        console.log("initial ETH balance: ", initialBalance);
 
-        require(initialBalance > 0, "Insufficient LINK balance");
-        wethInterface.approve(address(swapContractAddress), 1e19);
-        swapContractAddress.swapEthForLink(1e18);
+        require(initialBalance > 0, "Insufficient Weth balance");
+        wethInterface.approve(address(swapContractAddress), amt);
+        swapContractAddress.swapETHForUSD(amt);
+        // wethInterface.approve(address(this), amt);
+        // wethInterface.transferFrom(whaleAddr, address(this), amt);
+    }
+
+    function testSwapDAIForUSD() public {
+        uint256 initialBalance = daiInterface.balanceOf(msg.sender);
+        console.log("initial DAI balance: ", initialBalance);
+
+        require(initialBalance > 0, "Insufficient DAI balance");
+        daiInterface.approve(address(swapContractAddress), amt);
+        swapContractAddress.swapDAIForUSD(amt);
         // wethInterface.approve(address(this), amt);
         // wethInterface.transferFrom(whaleAddr, address(this), amt);
     }
