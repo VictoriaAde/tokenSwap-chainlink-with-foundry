@@ -11,7 +11,7 @@ contract SwapTest is Test {
     // 0x6B175474E89094C44Da98b954EedeAC495271d0F dai mainnet
     // address WETHAddress = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     // address DAIAddress = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
-    address feedregistry = 0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf;
+    address feedregistry = 0x42585eD362B3f1BCa95c640FdFf35Ef899212734;
 
     address LINKAddress = 0x514910771AF9Ca656af840dff83E8264EcF986CA;
     address DAIAddress = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
@@ -40,7 +40,8 @@ contract SwapTest is Test {
         swapContractAddress = new TokenSwap(
             WETHAddress,
             LINKAddress,
-            DAIAddress,
+            // DAIAddress,
+            feedregistry,
             feedregistry
         );
 
@@ -53,8 +54,8 @@ contract SwapTest is Test {
         console.log("initial balance: ", initialBalance);
 
         require(initialBalance > 0, "Insufficient LINK balance");
-        wethInterface.approve(address(swapContractAddress), amt);
-        swapContractAddress.swapEthForLink(amt);
+        wethInterface.approve(address(swapContractAddress), 1e19);
+        swapContractAddress.swapEthForLink(1e18);
         // wethInterface.approve(address(this), amt);
         // wethInterface.transferFrom(whaleAddr, address(this), amt);
     }
